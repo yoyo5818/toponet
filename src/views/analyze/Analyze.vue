@@ -4,7 +4,7 @@
 	      <a-spin :spinning="spinning" :delay="delayTime">
 	        <div class="spin-content">
 			<div class="left">
-			  <a-progress :percent="30" />
+			  <a-progress :percent="rate1" />
 			  <a-progress :percent="50" status="active" />
 			  <a-progress :percent="70" status="exception" />
 			  <a-progress :percent="100" />
@@ -29,7 +29,7 @@
 	<a-upload
     name="file"
     :multiple="true"
-    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+    action="/api/result"
     :headers="headers"
     @change="handleChange"
   >
@@ -44,6 +44,7 @@
 export default {
   data() {
     return {
+    rate1 : 30,
 	  spinning: false,
 	  delayTime: 500,
       headers: {
@@ -54,8 +55,10 @@ export default {
   methods: {
     handleChange(info) {
       if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-	    this.spinning = true;
+        this.spinning = true;
+        console.log(info.file.response, info.fileList);
+        this.rate1 = info.file.response.rate;
+        this.spinning = false;
       }
       if (info.file.status === 'done') {
         this.$message.success(`${info.file.name} file uploaded successfully`);
